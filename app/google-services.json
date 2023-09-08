@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "16724887033",
+    "project_id": "fir-db-kotlin",
+    "storage_bucket": "fir-db-kotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16724887033:android:143cdf4e6144facfcde928",
+        "android_client_info": {
+          "package_name": "com.wahyus.firebasedbkt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16724887033-qe3dlk92caug5p4l2ej06o7cvl2uan3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp2cBISdbBDj9grDxw1-ZwGRiSS1Y1YOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "16724887033-qe3dlk92caug5p4l2ej06o7cvl2uan3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

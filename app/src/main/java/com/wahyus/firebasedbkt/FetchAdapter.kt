@@ -1,11 +1,12 @@
 package com.wahyus.firebasedbkt
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wahyus.firebasedbkt.databinding.ItemUserBinding
 
-class FetchAdapter: RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
+class FetchAdapter(private val itemAdapterCallback: ItemAdapterCallback): RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
 
     private val data = ArrayList<User>()
 
@@ -16,9 +17,13 @@ class FetchAdapter: RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
     }
 
     class FetchViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User) {
+        fun bind(user: User, itemAdapterCallback: ItemAdapterCallback) {
             binding.tvDataName.text = user.name
             binding.tvDataAddress.text = user.address
+
+            itemView.setOnClickListener {
+                itemAdapterCallback.onClick(user)
+            }
         }
     }
 
@@ -30,6 +35,10 @@ class FetchAdapter: RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: FetchViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data[position], itemAdapterCallback)
+    }
+
+    interface ItemAdapterCallback {
+        fun onClick(data: User)
     }
 }

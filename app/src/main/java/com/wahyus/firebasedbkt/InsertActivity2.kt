@@ -21,7 +21,6 @@ class InsertActivity2 : AppCompatActivity() {
         setContentView(binding.root)
 
         database = FirebaseDatabase.getInstance().getReference("users")
-        val userId = database.push().key.toString()
         binding.btnSave.setOnClickListener {
             val username = binding.edtUsername.text.toString()
             val name = binding.edtName.text.toString()
@@ -44,7 +43,7 @@ class InsertActivity2 : AppCompatActivity() {
                 val user = User(
                     username, name, age, address
                 )
-                database.child(userId).setValue(user)
+                database.child(username).setValue(user)
                     .addOnSuccessListener {
                         Toast.makeText(this, "successfully saved data", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, MainActivity::class.java))

@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,12 +31,13 @@ class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback {
         binding = ActivityFetchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = ArrayList<User>()
+        val user = mutableListOf<User>()
 
         fetchAdapter = FetchAdapter(this)
         database = FirebaseDatabase.getInstance().getReference("users")
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                user.clear()
                 for (child in snapshot.children) {
                     val data = child.getValue(User::class.java)
                     if (data != null) {
@@ -69,16 +72,39 @@ class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback {
         val edtName = view.findViewById<EditText>(R.id.edt_name_dialog)
         val edtAge = view.findViewById<EditText>(R.id.edt_age_dialog)
         val edtAddress = view.findViewById<EditText>(R.id.edt_address_dialog)
+        val btnUpdate = view.findViewById<Button>(R.id.btn_update)
 
         edtUsername.setText(data.username)
         edtName.setText(data.name)
         edtAge.setText(data.age)
         edtAddress.setText(data.address)
 
-//        val updateUsername = edtUsername.text.toString()
-//        val updateName = edtName.text.toString()
-//        val updateAge = edtAge.text.toString()
-//        val updateAddress = edtAddress.text.toString()
+        btnUpdate.setOnClickListener {
+            //get data edittext when user changes data
+            val username = edtUsername.text.toString()
+            val updateName = edtName.text.toString()
+            val updateAge = edtAge.text.toString()
+            val updateAddress = edtAddress.text.toString()
+
+            updateDataDb(username, updateName, updateAge, updateAddress)
+        }
+    }
+
+    private fun updateDataDb(username: String, updateName: String, updateAge: String, updateAddress: String) {
+        val user = mapOf<String, String>(
+            "address" to updateAddress,
+            "age" to updateAge,
+            "name" to updateName
+        )
+
+        database.child(username).updateChildren(user)
+            .addOnSuccessListener {
+                Toast.makeText(this, "update successfully", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "update failed: $it", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onClick(data: User) {

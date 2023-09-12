@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener
 import com.wahyus.firebasedbkt.databinding.ActivityFetchBinding
 
 @Suppress("UNCHECKED_CAST")
-class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback {
+class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback, FetchAdapter.ItemRemoveCallback {
     private lateinit var binding: ActivityFetchBinding
     private lateinit var database: DatabaseReference
     private lateinit var fetchAdapter: FetchAdapter
@@ -33,7 +33,7 @@ class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback {
 
         val user = mutableListOf<User>()
 
-        fetchAdapter = FetchAdapter(this)
+        fetchAdapter = FetchAdapter(this, this)
         database = FirebaseDatabase.getInstance().getReference("users")
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -110,5 +110,9 @@ class FetchActivity : AppCompatActivity(), FetchAdapter.ItemAdapterCallback {
     override fun onClick(data: User) {
         setDialog(data)
         dialog.show()
+    }
+
+    override fun onItemRemove(data: User) {
+        database.child(data.username.toString()).removeValue()
     }
 }

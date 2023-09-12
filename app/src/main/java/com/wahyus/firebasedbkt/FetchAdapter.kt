@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wahyus.firebasedbkt.databinding.ItemUserBinding
 
-class FetchAdapter(private val itemAdapterCallback: ItemAdapterCallback): RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
+class FetchAdapter(private val itemAdapterCallback: ItemAdapterCallback, private val itemRemoveCallback: ItemRemoveCallback): RecyclerView.Adapter<FetchAdapter.FetchViewHolder>() {
 
     private val data = ArrayList<User>()
 
@@ -16,13 +16,16 @@ class FetchAdapter(private val itemAdapterCallback: ItemAdapterCallback): Recycl
         notifyDataSetChanged()
     }
 
-    class FetchViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User, itemAdapterCallback: ItemAdapterCallback) {
+    inner class FetchViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: User) {
             binding.tvDataName.text = user.name
             binding.tvDataAddress.text = user.address
 
             itemView.setOnClickListener {
                 itemAdapterCallback.onClick(user)
+            }
+            binding.ibDelete.setOnClickListener {
+                itemRemoveCallback.onItemRemove(user)
             }
         }
     }
@@ -35,10 +38,14 @@ class FetchAdapter(private val itemAdapterCallback: ItemAdapterCallback): Recycl
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: FetchViewHolder, position: Int) {
-        holder.bind(data[position], itemAdapterCallback)
+        holder.bind(data[position])
     }
 
     interface ItemAdapterCallback {
         fun onClick(data: User)
+    }
+
+    interface ItemRemoveCallback {
+        fun onItemRemove(data: User)
     }
 }
